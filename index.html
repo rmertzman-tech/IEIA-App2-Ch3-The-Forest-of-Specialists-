@@ -3,99 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App 2: Forest of Specialists v2.5 | Collective Coherence</title>
+    <title>App 2: Forest of Specialists v2.7 | Fractal Coherence</title>
     <style>
         :root {
             --matrix-green: #00ff41; --void-black: #0d0208; --text-white: #f0fdf4;
             --danger-red: #ff3131; --gold: #ffd700; --panel-bg: #111827; --border: #22c55e;
-            --blue: #3b82f6;
         }
         body { font-family: 'Courier New', monospace; background: var(--void-black); color: var(--text-white); margin: 0; padding: 20px; line-height: 1.5; }
-        .app-container { max-width: 1150px; margin: 0 auto; border: 2px solid var(--border); border-radius: 12px; background: rgba(13, 2, 8, 0.98); position: relative; }
+        .app-container { max-width: 1200px; margin: 0 auto; border: 2px solid var(--border); border-radius: 12px; background: rgba(13, 2, 8, 0.98); position: relative; }
         header { padding: 1.5rem; border-bottom: 2px solid var(--border); text-align: center; background: #052e16; }
         
-        .layout { display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 20px; }
+        .layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; padding: 20px; }
         .card { border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; background: #000; margin-bottom: 15px; }
 
-        /* The Tree Canvas Area */
-        .tree-viewport { height: 300px; background: #000; border: 1px solid var(--border); position: relative; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
-        .branch-line { position: absolute; background: var(--matrix-green); width: 4px; transition: 0.8s; opacity: 0.4; }
-        .glow-node { position: absolute; width: 15px; height: 15px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 20px var(--gold); display: none; }
+        /* THE FRACTAL FOREST ENGINE */
+        .forest-viewport { height: 450px; background: #000; border: 2px solid var(--border); position: relative; border-radius: 8px; box-shadow: inset 0 0 20px #000; }
+        canvas { width: 100%; height: 100%; cursor: crosshair; }
 
         /* Specialist HUD */
-        .spec-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .spec-box { flex: 1; border: 1px solid var(--border); padding: 10px; text-align: center; background: #051a05; position: relative; }
-        .spec-name { font-weight: bold; color: var(--gold); display: block; font-size: 0.9rem; }
-        .status-bar { height: 5px; background: var(--matrix-green); width: 100%; margin-top: 8px; transition: 0.5s; }
+        .spec-container { display: flex; gap: 10px; margin-bottom: 15px; }
+        .spec-box { flex: 1; border: 1px solid var(--border); padding: 10px; text-align: center; background: #051a05; }
+        .spec-name { font-weight: bold; color: var(--gold); display: block; font-size: 0.8rem; }
+        .sapolsky-bar { height: 6px; background: var(--matrix-green); width: 100%; margin-top: 8px; transition: 0.5s; border-radius: 3px; }
         
-        /* Interaction Controls */
+        /* Buttons & Interactions */
         .btn { width: 100%; padding: 12px; border: 1px solid var(--matrix-green); background: none; color: var(--matrix-green); cursor: pointer; font-weight: bold; font-family: inherit; transition: 0.2s; margin-top: 8px; }
         .btn:hover { background: var(--matrix-green); color: black; }
         .btn-handshake { border-color: var(--gold); color: var(--gold); }
         .hidden { display: none !important; }
 
-        /* Modals */
+        /* Feedback Modals */
         #orientation-overlay, #audit-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .modal { max-width: 650px; border: 2px solid var(--border); padding: 30px; border-radius: 12px; background: #000; box-shadow: 0 0 30px var(--matrix-green); }
-        .audit-result { padding: 15px; border: 1px dashed var(--gold); background: #1a1a00; margin: 15px 0; }
+        .modal { max-width: 700px; border: 2px solid var(--border); padding: 30px; border-radius: 12px; background: #000; box-shadow: 0 0 40px var(--matrix-green); }
+        .feedback-msg { padding: 12px; border: 1px solid var(--border); margin-top: 10px; font-size: 0.95rem; background: #022c22; }
 
         .sidebar { font-size: 0.85rem; border-left: 1px solid var(--border); padding-left: 20px; }
         dt { font-weight: bold; color: var(--gold); margin-top: 10px; }
-        dd { margin: 0 0 10px 0; color: #cbd5e1; }
     </style>
 </head>
 <body>
 
 <div id="orientation-overlay">
     <div class="modal">
-        <h2>Engineer Orientation: The Forest Ecology</h2>
-        <p>In App 1, you protected your own cell. Now, you must protect the <strong>Cooperation of the Species</strong>.</p>
-        <p><strong>The Handshake Protocol:</strong> Specialists (like Doctors and Shamans) often inhabit different "leaves" on the P-Adic Tree. They don't need to agree, but they must coordinate at the <strong>Shared Trunk</strong>.</p>
-        <p><strong>Your Task:</strong> Resolve 3 systemic conflicts. If you force them to be identical, the tree rots. If you ignore their depletion, they truncate.</p>
-        <button class="btn" onclick="closeModal('orientation-overlay')">Initialize Ecology Audit</button>
+        <h2>Visualizing the P-Adic Tree</h2>
+        <p>Humanity is not a collection of atoms; we are a <strong>Forest</strong> of specialized branches growing from a shared biological <strong>Trunk</strong>.</p>
+        <p><strong>The Handshake:</strong> To survive, we must coordinate between branches (e.g., Science and Narrative). If we fight our allies, the tree rots. If we submit to extraction, the trunk breaks.</p>
+        <p><strong>Look for the Glow:</strong> When you achieve <em>Structural Recognition</em>, the shared node will illuminate. That is the <strong>Awe Signal</strong>.</p>
+        <button class="btn" onclick="closeModal('orientation-overlay')">Enter the Forest</button>
     </div>
 </div>
 
 <div id="audit-overlay" class="hidden">
     <div class="modal">
-        <h2>Ecology Performance Audit</h2>
+        <h2>Ecology Coherence Audit</h2>
         <div id="audit-content"></div>
-        <button class="btn" onclick="location.reload()">Restart Simulation</button>
+        <button class="btn" onclick="location.reload()">Return to Roots</button>
     </div>
 </div>
 
 <div class="app-container">
-    <header>
-        <h1>FOREST OF SPECIALISTS v2.5</h1>
-        <p>Ultrametric Coordination & Morphic Fidelity</p>
-    </header>
+    <header><h1>THE FOREST OF SPECIALISTS v2.7</h1></header>
 
     <div class="layout">
         <main>
-            <div class="tree-viewport" id="viewport">
-                <div class="branch-line" id="trunk" style="height: 80px; bottom: 0; left: 50%; width: 6px;"></div>
-                <div class="branch-line" id="branch-l" style="height: 140px; bottom: 80px; left: 35%; transform: rotate(-25deg);"></div>
-                <div class="branch-line" id="branch-r" style="height: 140px; bottom: 80px; left: 65%; transform: rotate(25deg);"></div>
-                <div id="glow" class="glow-node" style="left: calc(50% - 7px); bottom: 80px;"></div>
+            <div class="forest-viewport">
+                <canvas id="treeCanvas"></canvas>
             </div>
 
             <div class="spec-container">
-                <div class="spec-box">
-                    <span class="spec-name" id="name-l">Specialist A</span>
-                    <div class="status-bar" id="bar-l"></div>
-                </div>
-                <div class="spec-box">
-                    <span class="spec-name" id="name-r">Specialist B</span>
-                    <div class="status-bar" id="bar-r"></div>
-                </div>
+                <div class="spec-box"><span class="spec-name" id="name-l">Branch A</span><div class="sapolsky-bar" id="bar-l"></div></div>
+                <div class="spec-box"><span class="spec-name" id="name-r">Branch B</span><div class="sapolsky-bar" id="bar-r"></div></div>
             </div>
 
             <div class="card">
-                <h3 id="scenario-title">Initializing...</h3>
-                <p id="scenario-desc">System standby.</p>
+                <h3 id="scen-title">Forest Scan: Idle</h3>
+                <p id="scen-desc">System waiting for branch conflict data...</p>
+                <div id="feedback" class="feedback-msg hidden"></div>
                 
                 <div id="diag-area" class="hidden">
-                    <p><strong>Step 1: Diagnose the Harm (Extraction Matrix)</strong></p>
+                    <p><strong>DIAGNOSIS: Is this harm designed (Intentional) or accidental (Incidental)?</strong></p>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn" onclick="diagnose('incidental')">Incidental Depletion</button>
                         <button class="btn" onclick="diagnose('intentional')">Intentional Extraction</button>
@@ -103,26 +89,26 @@
                 </div>
 
                 <div id="action-area" class="hidden">
-                    <p><strong>Step 2: Apply Coordination Protocol</strong></p>
+                    <p><strong>ACTION: Authorize Coordination Protocol</strong></p>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn btn-handshake" onclick="resolve('handshake')">P-Adic Handshake (Shared Node)</button>
                         <button class="btn" onclick="resolve('force')">Force Agreement (Tolerance)</button>
                     </div>
                 </div>
 
-                <button id="next-btn" class="btn" onclick="loadNextScenario()">Enter Challenge</button>
+                <button id="next-btn" class="btn" onclick="loadScenario()">Start Structural Audit</button>
             </div>
         </main>
 
         <aside class="sidebar">
-            <h2>The Engineer's Toolkit</h2>
+            <h2>Specialist Toolkit</h2>
             <dl>
-                <dt>Shared Node ($p^0$)</dt>
-                <dd>The ancestral trunk where all specialists meet (e.g., "The Healer").</dd>
+                <dt>The Trunk ($p^0$)</dt>
+                <dd>The universal human substrate. All specialized branches meet here.</dd>
                 <dt>Morphic Fidelity</dt>
-                <dd>Letting a Doctor stay a Doctor while they work with a Shaman.</dd>
-                <dt>Lambda (&lambda;)</dt>
-                <dd>The measure of collective coherence. Crushed by friction.</dd>
+                <dd>The structural integrity of a specialist's unique branch. Do not erase the Shaman to satisfy the Doctor.</dd>
+                <dt>The Awe Signal</dt>
+                <dd>Geometric resonance. The "Glow" when the tree is healthy.</dd>
             </dl>
             
             
@@ -131,91 +117,125 @@
 </div>
 
 <script>
-    let currentIdx = -1;
-    let score = 0;
-    let auditCorrect = false;
+    const canvas = document.getElementById('treeCanvas');
+    const ctx = canvas.getContext('2d');
+    let idx = -1; let diagOk = false; let score = 0; let total = 3;
+    let treeHealthy = true;
 
-    const challenges = [
+    function resize() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.onresize = resize; resize();
+
+    function drawTree(x, y, len, angle, depth, isGolden = false) {
+        if (depth === 0) return;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        let x2 = x + Math.cos(angle) * len;
+        let y2 = y + Math.sin(angle) * len;
+        ctx.lineTo(x2, y2);
+        
+        ctx.strokeStyle = isGolden ? "#ffd700" : (treeHealthy ? "#00ff41" : "#ff3131");
+        ctx.lineWidth = depth * 1.5;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        let newLen = len * 0.75;
+        drawTree(x2, y2, newLen, angle - 0.4, depth - 1, isGolden);
+        drawTree(x2, y2, newLen, angle + 0.4, depth - 1, isGolden);
+    }
+
+    const cases = [
         {
-            title: "Case 1: The Bio-Narrative Split",
-            specA: "Dr. Aris (Virology)", specB: "Elder Sora (Ancestry)",
-            desc: "A pandemic has hit. Aris wants vaccines ($B$); Sora wants a mourning ritual ($A$). The system is ignoring both their sleep needs.",
+            title: "Node 1: The Bio-Narrative Split",
+            l: "Scientist", r: "Shaman",
+            desc: "A pandemic requires vaccines (B) and mourning rituals (A). The hospital design exhausts both specialists.",
             type: "incidental",
-            feedback: "Correct. The 'Shared Node' is the wellbeing of the people. By coordinating, they restore the community's BRC."
+            fail: "INCIDENTAL DEPLETION misdiagnosed. The system exhausted your allies while you looked for an enemy."
         },
         {
-            title: "Case 2: The Data vs. The Art",
-            specA: "AI Architect", specB: "Graphic Artist",
-            desc: "A corporation is using 'Scraping Bots' to steal the artist's style. This is a design choice to maximize profit.",
+            title: "Node 2: The Robben Island Test",
+            l: "Political Agent", r: "Prison Architect",
+            desc: "The regime is intentionally starving the agent to extract a confession. The architect designed the cell to break the substrate.",
             type: "intentional",
-            feedback: "Correct. This was Intentional Extraction. A Handshake is impossible until Resistance (The Mandela Protocol) stops the theft."
+            fail: "INTENTIONAL EXTRACTION misdiagnosed. You tried to 'handshake' with a system designed to murder your agency."
         },
         {
-            title: "Case 3: Green-Energy Conflict",
-            specA: "Engineer (Lithium)", specB: "Ecologist (Water)",
-            desc: "The mine design unintentionally drains the local aquifer. Both experts want a green future but are at an impasse.",
+            title: "Node 3: The AI Labor Conflict",
+            l: "Engineer", r: "Creative Artist",
+            desc: "Automated systems are unintentionally burning out artists by devaluing their narrative depth for efficiency.",
             type: "incidental",
-            feedback: "Correct. By finding the Shared Node (Survival), they redesign the mine to protect the water substrate."
+            fail: "INCIDENTAL DEPLETION misdiagnosed. This is a system-design error, not a malicious conspiracy."
         }
     ];
 
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    function loadNextScenario() {
-        currentIdx++;
-        if (currentIdx >= challenges.length) return generateFinalAudit();
-        
-        const c = challenges[currentIdx];
-        document.getElementById('scenario-title').innerText = c.title;
-        document.getElementById('scenario-desc').innerText = c.desc;
-        document.getElementById('name-l').innerText = c.specA;
-        document.getElementById('name-r').innerText = c.specB;
-        
+    function loadScenario() {
+        idx++;
+        if (idx >= total) return showAudit();
+        treeHealthy = true;
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+        drawTree(canvas.width/2, canvas.height, 80, -Math.PI/2, 8);
+
+        const c = cases[idx];
+        document.getElementById('scen-title').innerText = c.title;
+        document.getElementById('scen-desc').innerText = c.desc;
+        document.getElementById('name-l').innerText = c.l; document.getElementById('name-r').innerText = c.r;
         document.getElementById('next-btn').classList.add('hidden');
         document.getElementById('diag-area').classList.remove('hidden');
-        document.getElementById('glow').style.display = 'none';
-        document.getElementById('bar-l').style.background = 'var(--matrix-green)';
-        document.getElementById('bar-r').style.background = 'var(--matrix-green)';
+        document.getElementById('feedback').classList.add('hidden');
     }
 
     function diagnose(choice) {
-        auditCorrect = (choice === challenges[currentIdx].type);
-        document.getElementById('diag-area').classList.add('hidden');
-        document.getElementById('action-area').classList.remove('hidden');
+        diagOk = (choice === cases[idx].type);
+        const fb = document.getElementById('feedback');
+        fb.classList.remove('hidden');
         
-        if(!auditCorrect) {
+        if(!diagOk) {
+            treeHealthy = false;
+            fb.innerText = cases[idx].fail;
+            fb.style.color = "var(--danger-red)";
             document.getElementById('bar-l').style.background = 'var(--danger-red)';
             document.getElementById('bar-r').style.background = 'var(--danger-red)';
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            drawTree(canvas.width/2, canvas.height, 80, -Math.PI/2, 4); // Rotting tree
+        } else {
+            fb.innerText = "ACCURATE DIAGNOSIS. Substrate damage identified.";
+            fb.style.color = "var(--matrix-green)";
         }
+        document.getElementById('diag-area').classList.add('hidden');
+        document.getElementById('action-area').classList.remove('hidden');
     }
 
     function resolve(choice) {
         const isHandshake = (choice === 'handshake');
-        if (auditCorrect && isHandshake) {
-            score++;
-            document.getElementById('glow').style.display = 'block';
-        }
+        const fb = document.getElementById('feedback');
         
+        if (diagOk && isHandshake) {
+            score++;
+            fb.innerText = "SUCCESSFUL HANDSHAKE. The species-tree grows deeper.";
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            drawTree(canvas.width/2, canvas.height, 100, -Math.PI/2, 9, true); // Golden Glow
+        } else {
+            fb.innerText = "COORDINATION FAILED. Structural integrity lost.";
+            fb.style.color = "var(--danger-red)";
+            treeHealthy = false;
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            drawTree(canvas.width/2, canvas.height, 60, -Math.PI/2, 3);
+        }
+
         document.getElementById('action-area').classList.add('hidden');
         document.getElementById('next-btn').classList.remove('hidden');
-        document.getElementById('next-btn').innerText = "Continue to Next Challenge";
+        document.getElementById('next-btn').innerText = "Continue Audit";
     }
 
-    function generateFinalAudit() {
-        const auditDiv = document.getElementById('audit-content');
-        let title = score === 3 ? "Master Coherence Engineer" : "Ecology in Friction";
-        let rating = score === 3 ? "PERFECT RESONANCE" : "DIVERGENT DRIFT";
-
-        auditDiv.innerHTML = `
-            <h3>${title}</h3>
-            <div class="audit-result">RATING: ${rating} (${score}/3 Challenges Resolved)</div>
-            <p><strong>Lessons Learned:</strong></p>
-            <ul>
-                <li><strong>Morphic Fidelity:</strong> You kept the specialists on their unique branches.</li>
-                <li><strong>The Mandela Check:</strong> You recognized when extraction was intentional (Case 2).</li>
-                <li><strong>The Awe Signal:</strong> Your success at the Trunk proves that human diversity is a survival asset, not a conflict.</li>
-            </ul>
-        `;
+    function showAudit() {
+        const audit = document.getElementById('audit-content');
+        audit.innerHTML = `<h3>Final Coherence Score: ${score}/${total}</h3>
+        <p><strong>Meta-Constructor Review:</strong></p>
+        <p>${score === 3 ? "PERFECT RESONANCE. You are a Master of the Handshake. You prioritized the integrity of the whole Forest over individual bias." : "SYSTEMIC FRICTION. You allowed branches to rot because you could not identify the shared trunk."}</p>`;
         document.getElementById('audit-overlay').classList.remove('hidden');
     }
 </script>
