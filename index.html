@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App 2: Forest of Specialists v2.0 | Coherence Bridge</title>
+    <title>App 2: Forest of Specialists v2.5 | Collective Coherence</title>
     <style>
         :root {
             --matrix-green: #00ff41; --void-black: #0d0208; --text-white: #f0fdf4;
@@ -18,15 +18,15 @@
         .card { border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; background: #000; margin-bottom: 15px; }
 
         /* The Tree Canvas Area */
-        .tree-viewport { height: 350px; background: #000; border: 1px solid var(--border); position: relative; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
-        .branch-line { position: absolute; background: var(--matrix-green); width: 4px; transition: 0.5s; opacity: 0.6; }
-        .handshake-glow { position: absolute; bottom: 100px; width: 20px; height: 20px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 20px var(--gold); display: none; }
+        .tree-viewport { height: 300px; background: #000; border: 1px solid var(--border); position: relative; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
+        .branch-line { position: absolute; background: var(--matrix-green); width: 4px; transition: 0.8s; opacity: 0.4; }
+        .glow-node { position: absolute; width: 15px; height: 15px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 20px var(--gold); display: none; }
 
-        /* Specialist Cards */
-        .specialist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .spec-box { border: 1px solid var(--border); padding: 10px; text-align: center; background: #051a05; }
-        .spec-name { font-weight: bold; color: var(--gold); display: block; }
-        .status-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #1e293b; }
+        /* Specialist HUD */
+        .spec-container { display: flex; gap: 10px; margin-bottom: 20px; }
+        .spec-box { flex: 1; border: 1px solid var(--border); padding: 10px; text-align: center; background: #051a05; position: relative; }
+        .spec-name { font-weight: bold; color: var(--gold); display: block; font-size: 0.9rem; }
+        .status-bar { height: 5px; background: var(--matrix-green); width: 100%; margin-top: 8px; transition: 0.5s; }
         
         /* Interaction Controls */
         .btn { width: 100%; padding: 12px; border: 1px solid var(--matrix-green); background: none; color: var(--matrix-green); cursor: pointer; font-weight: bold; font-family: inherit; transition: 0.2s; margin-top: 8px; }
@@ -34,9 +34,10 @@
         .btn-handshake { border-color: var(--gold); color: var(--gold); }
         .hidden { display: none !important; }
 
-        /* Overlays */
+        /* Modals */
         #orientation-overlay, #audit-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal { max-width: 650px; border: 2px solid var(--border); padding: 30px; border-radius: 12px; background: #000; box-shadow: 0 0 30px var(--matrix-green); }
+        .audit-result { padding: 15px; border: 1px dashed var(--gold); background: #1a1a00; margin: 15px 0; }
 
         .sidebar { font-size: 0.85rem; border-left: 1px solid var(--border); padding-left: 20px; }
         dt { font-weight: bold; color: var(--gold); margin-top: 10px; }
@@ -47,137 +48,174 @@
 
 <div id="orientation-overlay">
     <div class="modal">
-        <h2>App 2 Orientation: The Forest Bridge</h2>
-        <p>In App 1, you learned to defend your own substrate. In App 2, you are a <strong>Coherence Engineer</strong>.</p>
-        <p><strong>Your Mission:</strong> Coordinate between a <strong>Western Doctor</strong> and an <strong>Indigenous Shaman</strong> to solve a community crisis.</p>
-        <p><strong>The Challenge:</strong> You must protect their <strong>Morphic Fidelity</strong> (their unique truths) while identifying the <strong>Trunk of Humanity</strong> they share. Beware: Systems of extraction are still at work here!</p>
-        <button class="btn" onclick="closeModal('orientation-overlay')">Begin Handshake Protocol</button>
+        <h2>Engineer Orientation: The Forest Ecology</h2>
+        <p>In App 1, you protected your own cell. Now, you must protect the <strong>Cooperation of the Species</strong>.</p>
+        <p><strong>The Handshake Protocol:</strong> Specialists (like Doctors and Shamans) often inhabit different "leaves" on the P-Adic Tree. They don't need to agree, but they must coordinate at the <strong>Shared Trunk</strong>.</p>
+        <p><strong>Your Task:</strong> Resolve 3 systemic conflicts. If you force them to be identical, the tree rots. If you ignore their depletion, they truncate.</p>
+        <button class="btn" onclick="closeModal('orientation-overlay')">Initialize Ecology Audit</button>
     </div>
 </div>
 
 <div id="audit-overlay" class="hidden">
     <div class="modal">
-        <h2>Handshake Performance Audit</h2>
+        <h2>Ecology Performance Audit</h2>
         <div id="audit-content"></div>
-        <button class="btn" onclick="location.reload()">Reset Bridge</button>
+        <button class="btn" onclick="location.reload()">Restart Simulation</button>
     </div>
 </div>
 
 <div class="app-container">
     <header>
-        <h1>FOREST OF SPECIALISTS v2.0</h1>
-        <p>Structural Recognition & Ultrametric Coordination</p>
+        <h1>FOREST OF SPECIALISTS v2.5</h1>
+        <p>Ultrametric Coordination & Morphic Fidelity</p>
     </header>
 
     <div class="layout">
         <main>
             <div class="tree-viewport" id="viewport">
-                <div class="branch-line" style="height: 100px; bottom: 0; left: 50%; width: 6px;" title="Universal Trunk"></div>
-                <div class="branch-line" style="height: 150px; bottom: 100px; left: 35%; transform: rotate(-25deg);" title="Scientific Branch"></div>
-                <div class="branch-line" style="height: 150px; bottom: 100px; left: 65%; transform: rotate(25deg);" title="Indigenous Branch"></div>
-                <div id="glow" class="handshake-glow" style="left: calc(50% - 10px);"></div>
+                <div class="branch-line" id="trunk" style="height: 80px; bottom: 0; left: 50%; width: 6px;"></div>
+                <div class="branch-line" id="branch-l" style="height: 140px; bottom: 80px; left: 35%; transform: rotate(-25deg);"></div>
+                <div class="branch-line" id="branch-r" style="height: 140px; bottom: 80px; left: 65%; transform: rotate(25deg);"></div>
+                <div id="glow" class="glow-node" style="left: calc(50% - 7px); bottom: 80px;"></div>
             </div>
 
-            <div class="specialist-grid">
+            <div class="spec-container">
                 <div class="spec-box">
-                    <span class="spec-name">Dr. Aris (Science)</span>
-                    <span class="status-tag" id="aris-status">COHERENT</span>
+                    <span class="spec-name" id="name-l">Specialist A</span>
+                    <div class="status-bar" id="bar-l"></div>
                 </div>
                 <div class="spec-box">
-                    <span class="spec-name">Elder Sora (Narrative)</span>
-                    <span class="status-tag" id="sora-status">COHERENT</span>
+                    <span class="spec-name" id="name-r">Specialist B</span>
+                    <div class="status-bar" id="bar-r"></div>
                 </div>
             </div>
 
-            <div class="card" id="interaction-panel">
-                <h3 id="task-title">Bridge Condition: Analyzing...</h3>
-                <p id="task-desc">A local community is suffering from <strong>Incidental Depletion</strong>. Both specialists are arguing over "who is right."</p>
+            <div class="card">
+                <h3 id="scenario-title">Initializing...</h3>
+                <p id="scenario-desc">System standby.</p>
                 
-                <div id="step-1" class="hidden">
-                    <p><strong>Step 1: Perform Extraction Audit.</strong> Is the system design depleting them?</p>
+                <div id="diag-area" class="hidden">
+                    <p><strong>Step 1: Diagnose the Harm (Extraction Matrix)</strong></p>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn" onclick="audit('incidental')">Incidental Depletion</button>
-                        <button class="btn" onclick="audit('intentional')">Intentional Extraction</button>
+                        <button class="btn" onclick="diagnose('incidental')">Incidental Depletion</button>
+                        <button class="btn" onclick="diagnose('intentional')">Intentional Extraction</button>
                     </div>
                 </div>
 
-                <div id="step-2" class="hidden">
-                    <p><strong>Step 2: Identify Shared Node.</strong> Where do these branches meet?</p>
+                <div id="action-area" class="hidden">
+                    <p><strong>Step 2: Apply Coordination Protocol</strong></p>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-handshake" onclick="handshake('trunk')">Authorize Shared Node: Healer ($p^0$)</button>
-                        <button class="btn" onclick="handshake('homogenize')">Force Agreement (Tolerance)</button>
+                        <button class="btn btn-handshake" onclick="resolve('handshake')">P-Adic Handshake (Shared Node)</button>
+                        <button class="btn" onclick="resolve('force')">Force Agreement (Tolerance)</button>
                     </div>
                 </div>
 
-                <button id="start-btn" class="btn" onclick="nextTask()">Begin System Diagnosis</button>
+                <button id="next-btn" class="btn" onclick="loadNextScenario()">Enter Challenge</button>
             </div>
         </main>
 
         <aside class="sidebar">
-            <h2>Bridge Glossay</h2>
+            <h2>The Engineer's Toolkit</h2>
             <dl>
-                <dt>Ultrametric Distance</dt>
-                <dd>The depth you must travel down the tree to find a shared ancestor. Lower $p$ = deeper connection.</dd>
+                <dt>Shared Node ($p^0$)</dt>
+                <dd>The ancestral trunk where all specialists meet (e.g., "The Healer").</dd>
                 <dt>Morphic Fidelity</dt>
-                <dd>Respecting that the Doctor treats the body ($B$) and the Shaman treats the narrative ($A$). They do not need to be the same to work together.</dd>
-                <dt>Extraction Matrix</dt>
-                <dd>Before they can help others, you must ensure the <em>system</em> isn't extracting their agency.</dd>
+                <dd>Letting a Doctor stay a Doctor while they work with a Shaman.</dd>
+                <dt>Lambda (&lambda;)</dt>
+                <dd>The measure of collective coherence. Crushed by friction.</dd>
             </dl>
+            
             
         </aside>
     </div>
 </div>
 
 <script>
-    let currentStep = 0;
+    let currentIdx = -1;
+    let score = 0;
     let auditCorrect = false;
-    let handshakeCorrect = false;
+
+    const challenges = [
+        {
+            title: "Case 1: The Bio-Narrative Split",
+            specA: "Dr. Aris (Virology)", specB: "Elder Sora (Ancestry)",
+            desc: "A pandemic has hit. Aris wants vaccines ($B$); Sora wants a mourning ritual ($A$). The system is ignoring both their sleep needs.",
+            type: "incidental",
+            feedback: "Correct. The 'Shared Node' is the wellbeing of the people. By coordinating, they restore the community's BRC."
+        },
+        {
+            title: "Case 2: The Data vs. The Art",
+            specA: "AI Architect", specB: "Graphic Artist",
+            desc: "A corporation is using 'Scraping Bots' to steal the artist's style. This is a design choice to maximize profit.",
+            type: "intentional",
+            feedback: "Correct. This was Intentional Extraction. A Handshake is impossible until Resistance (The Mandela Protocol) stops the theft."
+        },
+        {
+            title: "Case 3: Green-Energy Conflict",
+            specA: "Engineer (Lithium)", specB: "Ecologist (Water)",
+            desc: "The mine design unintentionally drains the local aquifer. Both experts want a green future but are at an impasse.",
+            type: "incidental",
+            feedback: "Correct. By finding the Shared Node (Survival), they redesign the mine to protect the water substrate."
+        }
+    ];
 
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    function nextTask() {
-        document.getElementById('start-btn').classList.add('hidden');
-        document.getElementById('step-1').classList.remove('hidden');
-        document.getElementById('task-title').innerText = "System Audit in Progress";
+    function loadNextScenario() {
+        currentIdx++;
+        if (currentIdx >= challenges.length) return generateFinalAudit();
+        
+        const c = challenges[currentIdx];
+        document.getElementById('scenario-title').innerText = c.title;
+        document.getElementById('scenario-desc').innerText = c.desc;
+        document.getElementById('name-l').innerText = c.specA;
+        document.getElementById('name-r').innerText = c.specB;
+        
+        document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('diag-area').classList.remove('hidden');
+        document.getElementById('glow').style.display = 'none';
+        document.getElementById('bar-l').style.background = 'var(--matrix-green)';
+        document.getElementById('bar-r').style.background = 'var(--matrix-green)';
     }
 
-    function audit(choice) {
-        auditCorrect = (choice === 'incidental');
-        document.getElementById('step-1').classList.add('hidden');
-        document.getElementById('step-2').classList.remove('hidden');
+    function diagnose(choice) {
+        auditCorrect = (choice === challenges[currentIdx].type);
+        document.getElementById('diag-area').classList.add('hidden');
+        document.getElementById('action-area').classList.remove('hidden');
         
-        // Visual feedback
         if(!auditCorrect) {
-            document.getElementById('aris-status').innerText = "DEPLETED";
-            document.getElementById('aris-status').style.background = "var(--danger-red)";
+            document.getElementById('bar-l').style.background = 'var(--danger-red)';
+            document.getElementById('bar-r').style.background = 'var(--danger-red)';
         }
     }
 
-    function handshake(choice) {
-        handshakeCorrect = (choice === 'trunk');
-        document.getElementById('step-2').classList.add('hidden');
-        if(handshakeCorrect) {
+    function resolve(choice) {
+        const isHandshake = (choice === 'handshake');
+        if (auditCorrect && isHandshake) {
+            score++;
             document.getElementById('glow').style.display = 'block';
         }
-        generateAudit();
+        
+        document.getElementById('action-area').classList.add('hidden');
+        document.getElementById('next-btn').classList.remove('hidden');
+        document.getElementById('next-btn').innerText = "Continue to Next Challenge";
     }
 
-    function generateAudit() {
+    function generateFinalAudit() {
         const auditDiv = document.getElementById('audit-content');
-        let feedback = "";
+        let title = score === 3 ? "Master Coherence Engineer" : "Ecology in Friction";
+        let rating = score === 3 ? "PERFECT RESONANCE" : "DIVERGENT DRIFT";
 
-        if (auditCorrect && handshakeCorrect) {
-            feedback = `<h3>SUCCESS: FULL COHERENCE REACHED</h3>
-            <p><strong>Review:</strong> You correctly identified that the tension was <em>Incidental Depletion</em>. By finding the <strong>Shared Node ($p^0$)</strong>, you allowed both to maintain their Morphic Fidelity while solving the crisis.</p>`;
-        } else if (auditCorrect && !handshakeCorrect) {
-            feedback = `<h3>FAILURE: COGNITIVE HOMOGENIZATION</h3>
-            <p><strong>Review:</strong> You diagnosed the harm correctly, but you tried to force "Tolerance." By making them agree, you erased their unique specialists' depth. The bridge collapsed.</p>`;
-        } else {
-            feedback = `<h3>FAILURE: SYSTEMIC COLLAPSE</h3>
-            <p><strong>Review:</strong> You failed to see the <em>Incidental Depletion</em>. Because the system was draining the Doctor, he had no metabolic budget to coordinate with the Shaman.</p>`;
-        }
-
-        auditDiv.innerHTML = feedback;
+        auditDiv.innerHTML = `
+            <h3>${title}</h3>
+            <div class="audit-result">RATING: ${rating} (${score}/3 Challenges Resolved)</div>
+            <p><strong>Lessons Learned:</strong></p>
+            <ul>
+                <li><strong>Morphic Fidelity:</strong> You kept the specialists on their unique branches.</li>
+                <li><strong>The Mandela Check:</strong> You recognized when extraction was intentional (Case 2).</li>
+                <li><strong>The Awe Signal:</strong> Your success at the Trunk proves that human diversity is a survival asset, not a conflict.</li>
+            </ul>
+        `;
         document.getElementById('audit-overlay').classList.remove('hidden');
     }
 </script>
